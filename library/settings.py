@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # local apps
     'my_app.apps.MyAppConfig',
+    'hw_01_app.apps.Hw01AppConfig',
 ]
 
 MIDDLEWARE = [
