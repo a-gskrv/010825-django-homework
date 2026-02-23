@@ -14,6 +14,8 @@ from pathlib import Path
 
 from environ import Env
 
+import local_settings
+
 env = Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,13 +85,27 @@ WSGI_APPLICATION = 'library.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if not env.bool('MYSQL'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    file_local_settings = env.str('MYSQL_FILE_SETTINGS')
+    local_settings_env = Env()
 
+    local_settings_env.read_env(BASE_DIR / file_local_settings)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": local_settings_env.str("DATABASE_WRITE"),
+            "USER": local_settings_env.str("USER"),
+            "PASSWORD": local_settings_env.str("PASSWORD"),
+            "HOST": local_settings_env.str("HOST"),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

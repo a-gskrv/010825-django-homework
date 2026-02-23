@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from hw_01_app.views import hw_django_01
 from my_app.views import index
 
 urlpatterns = [
     path('', index),
+    path('hw_01/', hw_django_01),
     path('admin/', admin.site.urls),
 ]
